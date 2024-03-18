@@ -20,7 +20,7 @@ func (r *Repo_User) GetUsers() {
 
 }
 
-func (r *Repo_User) GetUsersById(id int) {
+func (r *Repo_User) GetUserById(id int) {
 
 }
 
