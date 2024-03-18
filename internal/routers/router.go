@@ -7,4 +7,5 @@ import (
 
 func Routrer(g *gin.Engine, db *sqlx.DB) {
 	TaskRouter(g, db)
+	UserRouter(g, db)
 }
