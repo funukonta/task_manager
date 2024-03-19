@@ -58,3 +58,19 @@ func (h *handler_Task) GetTasksById(c *gin.Context) {
 
 	pkg.Responses(http.StatusOK, &pkg.BodJson{Data: result}).Send(c)
 }
+
+func (h *handler_Task) EditTasks(c *gin.Context) {
+	task := &models.TasksModel{}
+	if err := c.ShouldBind(task); err != nil {
+		pkg.Responses(http.StatusBadRequest, &pkg.BodJson{Message: err.Error()}).Send(c)
+		return
+	}
+	id := c.Param("id")
+
+	if err := h.service.EditTasks(id, task); err != nil {
+		pkg.Responses(http.StatusBadRequest, &pkg.BodJson{Message: err.Error()}).Send(c)
+		return
+	}
+
+	pkg.Responses(http.StatusOK, &pkg.BodJson{Message: "Berhasil edit tasks"}).Send(c)
+}

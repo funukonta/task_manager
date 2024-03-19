@@ -2,6 +2,7 @@ package repositories
 
 import (
 	"context"
+	"time"
 
 	"github.com/funukonta/task_manager/internal/models"
 	"github.com/jmoiron/sqlx"
@@ -55,8 +56,20 @@ func (r *repo_Task) GetTasksById(id int) (*models.TasksModel, error) {
 	return result, nil
 }
 
-func (r *repo_Task) EditTask(id int) {
+func (r *repo_Task) EditTasks(data *models.TasksModel) error {
+	tx, err := r.BeginTxx(context.Background(), nil)
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
 
+	query := `update tasks set user_id=$1,title=$2,description=$3,status=$4,updated_at=$5 where id=$6`
+	_, err = tx.Exec(query, data.UserID, data.Title, data.Description, data.Status, time.Now(), data.ID)
+	if err != nil {
+		return err
+	}
+
+	return tx.Commit()
 }
 
 func (r *repo_Task) DeleteTask(id int) {

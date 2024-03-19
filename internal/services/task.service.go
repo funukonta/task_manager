@@ -2,6 +2,7 @@ package services
 
 import (
 	"fmt"
+	"strconv"
 	"strings"
 
 	"github.com/funukonta/task_manager/internal/models"
@@ -12,7 +13,7 @@ type Service_Task interface {
 	RegisterTasks(*models.TasksModel) (*models.TasksModel, error)
 	GetTasks() ([]models.TasksModel, error)
 	GetTasksById(id int) (*models.TasksModel, error)
-	EditTasks(data *models.TasksModel) error
+	EditTasks(id string, data *models.TasksModel) error
 	DeleteTasks(id int) error
 }
 
@@ -55,8 +56,14 @@ func (s *service_Task) GetTasksById(id int) (*models.TasksModel, error) {
 
 	return result, nil
 }
-func (s *service_Task) EditTasks(data *models.TasksModel) error {
-	return nil
+func (s *service_Task) EditTasks(id string, data *models.TasksModel) error {
+	var err error
+	data.ID, err = strconv.Atoi(id)
+	if err != nil {
+		return err
+	}
+
+	return s.repo.EditTasks(data)
 }
 func (s *service_Task) DeleteTasks(id int) error {
 	return nil

@@ -14,6 +14,6 @@ type Repo_Tasks interface {
 	RegisterTasks(*models.TasksModel) (*models.TasksModel, error)
 	GetTasks() ([]models.TasksModel, error)
 	GetTasksById(id int) (*models.TasksModel, error)
-	// EditTasks(data *models.TasksModel) error
+	EditTasks(data *models.TasksModel) error
 	// DeleteTasks(id int) error
 }
