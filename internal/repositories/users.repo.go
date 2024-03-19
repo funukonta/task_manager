@@ -1,33 +1,50 @@
 package repositories
 
 import (
+	"context"
+
+	"github.com/funukonta/task_manager/internal/models"
 	"github.com/jmoiron/sqlx"
 )
 
-type Repo_User struct {
+type repo_Users struct {
 	*sqlx.DB
 }
 
-func New_RepoUser(db *sqlx.DB) Repo_UsersInterface {
-	return &Repo_User{db}
+func New_RepoUser(db *sqlx.DB) Repo_Users {
+	return &repo_Users{db}
 }
 
-func (r *Repo_User) RegisterUser() {
+func (r *repo_Users) RegisterUser(data *models.UserModel) (*models.UserModel, error) {
+	tx, err := r.BeginTxx(context.Background(), nil)
+	if err != nil {
+		return nil, err
+	}
+	defer tx.Rollback()
+
+	query := `insert into users (name,email,password) values ($1,$2,$3)
+	returning *`
+	userCreated := models.UserModel{}
+	if err := tx.Get(&userCreated, query, data.Name, data.Email, data.Password); err != nil {
+		return nil, err
+	}
+
+	err = tx.Commit()
+	return &userCreated, err
+}
+
+func (r *repo_Users) GetUsers() {
 
 }
 
-func (r *Repo_User) GetUsers() {
+func (r *repo_Users) GetUserById(id int) {
 
 }
 
-func (r *Repo_User) GetUserById(id int) {
+func (r *repo_Users) EditUser(id int) {
 
 }
 
-func (r *Repo_User) EditUser(id int) {
-
-}
-
-func (r *Repo_User) DeleteUser(id int) {
+func (r *repo_Users) DeleteUser(id int) {
 
 }
