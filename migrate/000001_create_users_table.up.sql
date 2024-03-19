@@ -8,3 +8,5 @@ CREATE TABLE IF NOT EXISTS users (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+INSERT INTO users (name,email,password) values ('Evan Roy','evanroy36@gmail.com','password!aman')

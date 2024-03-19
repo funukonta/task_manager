@@ -10,3 +10,5 @@ CREATE TABLE IF NOT EXISTS tasks (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(id)
 );
+
+INSERT INTO tasks (user_id,title,description) values (1,'Berbuat baik','sodaqoh dan beramal')
