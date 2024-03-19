@@ -1,6 +1,8 @@
 package services
 
 import (
+	"fmt"
+
 	"github.com/funukonta/task_manager/internal/models"
 	"github.com/funukonta/task_manager/internal/repositories"
 )
@@ -26,7 +28,16 @@ func (s *service_User) RegisterUser(data *models.UserModel) (*models.UserModel, 
 	return created, err
 }
 func (s *service_User) GetUsers() ([]models.UserModel, error) {
-	return s.repo.GetUsers()
+	result, err := s.repo.GetUsers()
+	if err != nil {
+		return nil, err
+	}
+
+	if len(result) == 0 {
+		return nil, fmt.Errorf("tidak ada data")
+	}
+
+	return result, nil
 }
 func (s *service_User) GetUserById(id int) (*models.UserModel, error) {
 	return s.repo.GetUserById(id)
