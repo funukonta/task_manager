@@ -39,4 +39,4 @@ func main() {
 // migrate create -ext sql -dir migrate crate_table_user
 
 // docker postges
-// docker run --name task-manager -e POSTGRES_PASSWORD=task-manager -p 5432:5432 -d postgres && sleep 3 && docker exec -it task-manager psql -U postgres -d postgres -c "CREATE DATABASE task-manager;"
+// docker run --name task-manager -e POSTGRES_PASSWORD=task-manager -p 5432:5432 -d postgres && sleep 3 && docker exec -it task-manager psql -U postgres -d postgres -c "CREATE DATABASE task_manager;"
