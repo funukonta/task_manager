@@ -4,7 +4,7 @@ import "github.com/funukonta/task_manager/internal/models"
 
 type Repo_Users interface {
 	RegisterUser(*models.UserModel) (*models.UserModel, error)
-	GetUsers()
+	GetUsers() ([]models.UserModel, error)
 	GetUserById(id int)
 	EditUser(id int)
 	DeleteUser(id int)

@@ -32,3 +32,13 @@ func (h *handlers_Users) RegisterUser(c *gin.Context) {
 
 	pkg.Responses(http.StatusOK, &pkg.BodJson{Data: created}).Send(c)
 }
+
+func (h *handlers_Users) GetUsers(c *gin.Context) {
+	result, err := h.services.GetUsers()
+	if err != nil {
+		pkg.Responses(http.StatusBadRequest, &pkg.BodJson{Message: err.Error()}).Send(c)
+		return
+	}
+
+	pkg.Responses(http.StatusOK, &pkg.BodJson{Data: result}).Send(c)
+}

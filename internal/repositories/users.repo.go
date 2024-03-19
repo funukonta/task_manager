@@ -33,8 +33,11 @@ func (r *repo_Users) RegisterUser(data *models.UserModel) (*models.UserModel, er
 	return &userCreated, err
 }
 
-func (r *repo_Users) GetUsers() {
-
+func (r *repo_Users) GetUsers() ([]models.UserModel, error) {
+	result := []models.UserModel{}
+	query := `select * from users`
+	err := r.Select(&result, query)
+	return result, err
 }
 
 func (r *repo_Users) GetUserById(id int) {
