@@ -19,5 +19,6 @@ func UserRouter(g *gin.Engine, db *sqlx.DB) {
 		userRoute.GET("", handler.GetUsers)
 
 		userRoute.GET("/:id", handler.GetUserById)
+		userRoute.PUT("/:id", handler.EditUser)
 	}
 }

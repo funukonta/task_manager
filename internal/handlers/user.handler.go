@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/funukonta/task_manager/internal/models"
@@ -57,4 +58,19 @@ func (h *handlers_Users) GetUserById(c *gin.Context) {
 	}
 
 	pkg.Responses(http.StatusOK, &pkg.BodJson{Data: result}).Send(c)
+}
+
+func (h *handlers_Users) EditUser(c *gin.Context) {
+	user := models.UserModel{}
+	if err := c.ShouldBind(&user); err != nil {
+		pkg.Responses(http.StatusBadRequest, &pkg.BodJson{Message: err.Error()}).Send(c)
+		return
+	}
+
+	if err := h.services.EditUser(&user); err != nil {
+		pkg.Responses(http.StatusBadRequest, &pkg.BodJson{Message: err.Error()}).Send(c)
+		return
+	}
+
+	pkg.Responses(http.StatusOK, &pkg.BodJson{Message: fmt.Sprintf("Berhasil update customer id: %d", user.ID)}).Send(c)
 }

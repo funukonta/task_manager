@@ -2,6 +2,7 @@ package repositories
 
 import (
 	"context"
+	"time"
 
 	"github.com/funukonta/task_manager/internal/models"
 	"github.com/jmoiron/sqlx"
@@ -47,8 +48,20 @@ func (r *repo_Users) GetUserById(id int) (*models.UserModel, error) {
 	return user, err
 }
 
-func (r *repo_Users) EditUser(id int) {
+func (r *repo_Users) EditUser(data *models.UserModel) error {
+	tx, err := r.BeginTxx(context.Background(), nil)
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
 
+	query := `update users set name=$1,email=$2,password=$3,updated_at=$4 where id=$5`
+	_, err = tx.Exec(query, data.Name, data.Email, data.Password, time.Now(), data.ID)
+	if err != nil {
+		return err
+	}
+
+	return tx.Commit()
 }
 
 func (r *repo_Users) DeleteUser(id int) {
