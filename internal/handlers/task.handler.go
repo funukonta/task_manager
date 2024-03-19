@@ -74,3 +74,18 @@ func (h *handler_Task) EditTasks(c *gin.Context) {
 
 	pkg.Responses(http.StatusOK, &pkg.BodJson{Message: "Berhasil edit tasks"}).Send(c)
 }
+
+func (h *handler_Task) DeleteTasks(c *gin.Context) {
+	task := &models.TasksModel{}
+	if err := c.ShouldBindUri(task); err != nil {
+		pkg.Responses(http.StatusBadRequest, &pkg.BodJson{Message: err.Error()}).Send(c)
+		return
+	}
+
+	if err := h.service.DeleteTasks(task.ID); err != nil {
+		pkg.Responses(http.StatusBadRequest, &pkg.BodJson{Message: err.Error()}).Send(c)
+		return
+	}
+
+	pkg.Responses(http.StatusOK, &pkg.BodJson{Message: "Berhasil edit tasks"}).Send(c)
+}

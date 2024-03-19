@@ -72,6 +72,18 @@ func (r *repo_Task) EditTasks(data *models.TasksModel) error {
 	return tx.Commit()
 }
 
-func (r *repo_Task) DeleteTask(id int) {
+func (r *repo_Task) DeleteTasks(id int) error {
+	tx, err := r.BeginTxx(context.Background(), nil)
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
 
+	query := `delete from tasks where id=$1`
+	_, err = tx.Exec(query, id)
+	if err != nil {
+		return err
+	}
+
+	return tx.Commit()
 }

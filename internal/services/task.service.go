@@ -66,5 +66,5 @@ func (s *service_Task) EditTasks(id string, data *models.TasksModel) error {
 	return s.repo.EditTasks(data)
 }
 func (s *service_Task) DeleteTasks(id int) error {
-	return nil
+	return s.repo.DeleteTasks(id)
 }
