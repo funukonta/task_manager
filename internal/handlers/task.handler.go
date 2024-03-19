@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/funukonta/task_manager/internal/models"
@@ -45,7 +46,7 @@ func (h *handler_Task) GetTasks(c *gin.Context) {
 
 func (h *handler_Task) GetTasksById(c *gin.Context) {
 	task := &models.TasksModel{}
-	if err := c.ShouldBind(task); err != nil {
+	if err := c.ShouldBindUri(task); err != nil {
 		pkg.Responses(http.StatusBadRequest, &pkg.BodJson{Message: err.Error()}).Send(c)
 		return
 	}
@@ -87,5 +88,5 @@ func (h *handler_Task) DeleteTasks(c *gin.Context) {
 		return
 	}
 
-	pkg.Responses(http.StatusOK, &pkg.BodJson{Message: "Berhasil edit tasks"}).Send(c)
+	pkg.Responses(http.StatusOK, &pkg.BodJson{Message: fmt.Sprintf("Berhasil delete tasks id: %d", task.ID)}).Send(c)
 }
