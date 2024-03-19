@@ -3,7 +3,7 @@ package models
 import "time"
 
 type UserModel struct {
-	ID        int       `json:"id" db:"id"`
+	ID        int       `json:"id" db:"id" uri:"id"`
 	Name      string    `json:"name" db:"name"`
 	Email     string    `json:"email" db:"email"`
 	Password  string    `json:"password" db:"password"`

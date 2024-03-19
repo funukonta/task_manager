@@ -8,7 +8,7 @@ import (
 type Service_User interface {
 	RegisterUser(*models.UserModel) (*models.UserModel, error)
 	GetUsers() ([]models.UserModel, error)
-	GetUserById(id int)
+	GetUserById(id int) (*models.UserModel, error)
 	EditUser(id int)
 	DeleteUser(id int)
 }
@@ -28,8 +28,8 @@ func (s *service_User) RegisterUser(data *models.UserModel) (*models.UserModel, 
 func (s *service_User) GetUsers() ([]models.UserModel, error) {
 	return s.repo.GetUsers()
 }
-func (s *service_User) GetUserById(id int) {
-
+func (s *service_User) GetUserById(id int) (*models.UserModel, error) {
+	return s.repo.GetUserById(id)
 }
 func (s *service_User) EditUser(id int) {
 

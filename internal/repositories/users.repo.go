@@ -40,8 +40,11 @@ func (r *repo_Users) GetUsers() ([]models.UserModel, error) {
 	return result, err
 }
 
-func (r *repo_Users) GetUserById(id int) {
-
+func (r *repo_Users) GetUserById(id int) (*models.UserModel, error) {
+	query := `select * from users where id=$1`
+	user := &models.UserModel{}
+	err := r.Get(user, query, id)
+	return user, err
 }
 
 func (r *repo_Users) EditUser(id int) {

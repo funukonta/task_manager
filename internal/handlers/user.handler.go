@@ -42,3 +42,19 @@ func (h *handlers_Users) GetUsers(c *gin.Context) {
 
 	pkg.Responses(http.StatusOK, &pkg.BodJson{Data: result}).Send(c)
 }
+
+func (h *handlers_Users) GetUserById(c *gin.Context) {
+	user := models.UserModel{}
+	if err := c.ShouldBindUri(&user); err != nil {
+		pkg.Responses(http.StatusBadRequest, &pkg.BodJson{Message: err.Error()}).Send(c)
+		return
+	}
+
+	result, err := h.services.GetUserById(user.ID)
+	if err != nil {
+		pkg.Responses(http.StatusBadRequest, &pkg.BodJson{Message: err.Error()}).Send(c)
+		return
+	}
+
+	pkg.Responses(http.StatusOK, &pkg.BodJson{Data: result}).Send(c)
+}
