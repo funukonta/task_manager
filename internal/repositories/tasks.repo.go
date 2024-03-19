@@ -23,7 +23,7 @@ func (r *repo_Task) RegisterTasks(data *models.TasksModel) (*models.TasksModel, 
 	}
 	defer tx.Rollback()
 
-	query := `insert tasks (user_id,title,description) values ($1,$2,$3)
+	query := `insert into tasks (user_id,title,description) values ($1,$2,$3)
 	returning *
 	`
 	result := &models.TasksModel{}
