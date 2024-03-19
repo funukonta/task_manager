@@ -64,6 +64,18 @@ func (r *repo_Users) EditUser(data *models.UserModel) error {
 	return tx.Commit()
 }
 
-func (r *repo_Users) DeleteUser(id int) {
+func (r *repo_Users) DeleteUser(id int) error {
+	tx, err := r.BeginTxx(context.Background(), nil)
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
 
+	query := `delete from users where id=$1`
+	_, err = tx.Exec(query, id)
+	if err != nil {
+		return err
+	}
+
+	return tx.Commit()
 }

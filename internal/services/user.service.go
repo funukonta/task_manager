@@ -13,7 +13,7 @@ type Service_User interface {
 	GetUsers() ([]models.UserModel, error)
 	GetUserById(id int) (*models.UserModel, error)
 	EditUser(data *models.UserModel) error
-	DeleteUser(id int)
+	DeleteUser(id int) error
 }
 
 type service_User struct {
@@ -60,6 +60,6 @@ func (s *service_User) EditUser(data *models.UserModel) error {
 
 	return err
 }
-func (s *service_User) DeleteUser(id int) {
-
+func (s *service_User) DeleteUser(id int) error {
+	return s.repo.DeleteUser(id)
 }

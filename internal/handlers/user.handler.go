@@ -3,6 +3,7 @@ package handlers
 import (
 	"fmt"
 	"net/http"
+	"strconv"
 
 	"github.com/funukonta/task_manager/internal/models"
 	"github.com/funukonta/task_manager/internal/services"
@@ -62,7 +63,15 @@ func (h *handlers_Users) GetUserById(c *gin.Context) {
 
 func (h *handlers_Users) EditUser(c *gin.Context) {
 	user := models.UserModel{}
-	if err := c.ShouldBind(&user); err != nil {
+	var err error
+
+	if err = c.ShouldBind(&user); err != nil {
+		pkg.Responses(http.StatusBadRequest, &pkg.BodJson{Message: err.Error()}).Send(c)
+		return
+	}
+	id := c.Param("id")
+	user.ID, err = strconv.Atoi(id)
+	if err != nil {
 		pkg.Responses(http.StatusBadRequest, &pkg.BodJson{Message: err.Error()}).Send(c)
 		return
 	}
@@ -72,5 +81,20 @@ func (h *handlers_Users) EditUser(c *gin.Context) {
 		return
 	}
 
-	pkg.Responses(http.StatusOK, &pkg.BodJson{Message: fmt.Sprintf("Berhasil update customer id: %d", user.ID)}).Send(c)
+	pkg.Responses(http.StatusOK, &pkg.BodJson{Message: fmt.Sprintf("Berhasil update user id: %d", user.ID)}).Send(c)
+}
+
+func (h *handlers_Users) DeleteUser(c *gin.Context) {
+	user := models.UserModel{}
+	if err := c.ShouldBindUri(&user); err != nil {
+		pkg.Responses(http.StatusBadRequest, &pkg.BodJson{Message: err.Error()}).Send(c)
+		return
+	}
+
+	if err := h.services.DeleteUser(user.ID); err != nil {
+		pkg.Responses(http.StatusBadRequest, &pkg.BodJson{Message: err.Error()}).Send(c)
+		return
+	}
+
+	pkg.Responses(http.StatusOK, &pkg.BodJson{Message: fmt.Sprintf("Berhasil delete user id: %d", user.ID)}).Send(c)
 }

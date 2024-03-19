@@ -7,7 +7,7 @@ type Repo_Users interface {
 	GetUsers() ([]models.UserModel, error)
 	GetUserById(id int) (*models.UserModel, error)
 	EditUser(data *models.UserModel) error
-	DeleteUser(id int)
+	DeleteUser(id int) error
 }
 
 type Repo_Tasks interface {
