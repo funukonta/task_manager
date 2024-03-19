@@ -2,6 +2,7 @@ package services
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/funukonta/task_manager/internal/models"
 	"github.com/funukonta/task_manager/internal/repositories"
@@ -40,10 +41,24 @@ func (s *service_User) GetUsers() ([]models.UserModel, error) {
 	return result, nil
 }
 func (s *service_User) GetUserById(id int) (*models.UserModel, error) {
-	return s.repo.GetUserById(id)
+	result, err := s.repo.GetUserById(id)
+	if err != nil {
+		if strings.Contains(err.Error(), "no rows") {
+			return nil, fmt.Errorf("tidak ada data")
+		}
+	}
+
+	return result, err
 }
 func (s *service_User) EditUser(data *models.UserModel) error {
-	return s.repo.EditUser(data)
+	err := s.repo.EditUser(data)
+	if err != nil {
+		if strings.Contains(err.Error(), "no rows") {
+			return fmt.Errorf("tidak ada data")
+		}
+	}
+
+	return err
 }
 func (s *service_User) DeleteUser(id int) {
 
