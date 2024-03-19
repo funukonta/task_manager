@@ -11,9 +11,9 @@ type Repo_Users interface {
 }
 
 type Repo_Tasks interface {
-	AddTask()
-	GetTasks()
-	GetTaskById(id int)
-	EditTask(id int)
-	DeleteTask(id int)
+	RegisterTasks(*models.TasksModel) (*models.TasksModel, error)
+	GetTasks() ([]models.TasksModel, error)
+	GetTasksById(id int) (*models.TasksModel, error)
+	// EditTasks(data *models.TasksModel) error
+	// DeleteTasks(id int) error
 }
