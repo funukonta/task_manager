@@ -1,8 +1,11 @@
 package main
 
 import (
+	"context"
 	"fmt"
+	"io"
 	"log"
+	"net/http"
 	"os"
 	"path/filepath"
 
@@ -28,11 +31,72 @@ func main() {
 	// gin init
 	r := gin.Default()
 
+	r.GET("/google/login", GoogleLogin)
+	r.GET("/google/callback", GoogleCallback)
 	routers.Routrer(r, db)
 
 	port := fmt.Sprintf(":%s", os.Getenv("APP_PORT"))
 	r.Run(port)
 
+}
+
+func GoogleLogin(c *gin.Context) {
+	googleConf := pkg.LoadConfig()
+
+	oauthState := pkg.GenerateStateOauthCookie(c.Writer)
+	url := googleConf.AuthCodeURL(oauthState)
+
+	c.Redirect(http.StatusTemporaryRedirect, url)
+}
+
+func GoogleCallback(c *gin.Context) {
+	// get oauth state from cookie for this user
+	oauthState, err := c.Cookie("oauthstate")
+	if err != nil {
+		c.Redirect(http.StatusTemporaryRedirect, "/")
+		return
+	}
+
+	state := c.Query("state")
+	code := c.Query("code")
+	c.Header("Content-Type", "application/json")
+
+	// ERROR : Invalid OAuth State
+	if state != oauthState {
+		c.Redirect(http.StatusTemporaryRedirect, "/")
+		fmt.Fprintf(c.Writer, "invalid oauth google state")
+		return
+	}
+
+	// Exchange Auth Code for Tokens
+	token, err := pkg.AppConfig.GoogleLogConfig.Exchange(
+		context.Background(), code)
+
+	// ERROR : Auth Code Exchange Failed
+	if err != nil {
+		fmt.Fprintf(c.Writer, "failed code exchange: %s", err.Error())
+		return
+	}
+
+	// Fetch User Data from google server
+	response, err := http.Get(pkg.OauthGoogleUrlAPI + token.AccessToken)
+
+	// ERROR : Unable to get user data from google
+	if err != nil {
+		fmt.Fprintf(c.Writer, "failed getting user info: %s", err.Error())
+		return
+	}
+
+	// Parse user data JSON Object
+	defer response.Body.Close()
+	contents, err := io.ReadAll(response.Body)
+	if err != nil {
+		fmt.Fprintf(c.Writer, "failed read response: %s", err.Error())
+		return
+	}
+
+	// send back response to browser
+	c.Writer.Write(contents)
 }
 
 // migrate create -ext sql -dir migrate crate_table_task
